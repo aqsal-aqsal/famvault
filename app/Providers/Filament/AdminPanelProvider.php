@@ -2,7 +2,9 @@
 
 namespace App\Providers\Filament;
 
+use App\Filament\Widgets\DocumentCategoryChart;
 use App\Filament\Widgets\ExpiringDocumentsWidget;
+use App\Filament\Widgets\UtilityCategoryChart;
 use App\Filament\Widgets\VaultStatsOverview;
 use Filament\Http\Middleware\Authenticate;
 use Filament\Http\Middleware\AuthenticateSession;
@@ -50,6 +52,8 @@ class AdminPanelProvider extends PanelProvider
             ->widgets([
                 VaultStatsOverview::class,
                 ExpiringDocumentsWidget::class,
+                DocumentCategoryChart::class,
+                UtilityCategoryChart::class,
             ])
             ->middleware([
                 EncryptCookies::class,

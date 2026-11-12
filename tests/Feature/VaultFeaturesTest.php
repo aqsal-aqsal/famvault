@@ -111,5 +111,15 @@ class VaultFeaturesTest extends TestCase
         $response = $this->actingAs($user)->get('/admin/family-tree');
         $response->assertStatus(200);
     }
+
+    public function test_authenticated_admin_can_access_dashboard_with_widgets(): void
+    {
+        $user = User::factory()->create();
+
+        $response = $this->actingAs($user)->get('/admin');
+        $response->assertStatus(200);
+        $response->assertSee('Dashboard');
+        $response->assertSee('Family Vault &amp; Tree', false);
+    }
 }
 
