@@ -121,5 +121,18 @@ class VaultFeaturesTest extends TestCase
         $response->assertSee('Dashboard');
         $response->assertSee('Family Vault &amp; Tree', false);
     }
+
+    public function test_global_search_is_configured_on_resources(): void
+    {
+        $memberAttrs = \App\Filament\Resources\FamilyMembers\FamilyMemberResource::getGloballySearchableAttributes();
+        $this->assertContains('full_name', $memberAttrs);
+        $this->assertContains('nickname', $memberAttrs);
+
+        $docAttrs = \App\Filament\Resources\VaultDocuments\VaultDocumentResource::getGloballySearchableAttributes();
+        $this->assertContains('title', $docAttrs);
+
+        $utilAttrs = \App\Filament\Resources\UtilityRecords\UtilityRecordResource::getGloballySearchableAttributes();
+        $this->assertContains('account_number', $utilAttrs);
+    }
 }
 

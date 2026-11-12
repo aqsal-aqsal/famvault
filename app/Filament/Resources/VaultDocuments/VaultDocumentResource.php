@@ -13,6 +13,7 @@ use Filament\Resources\Resource;
 use Filament\Schemas\Schema;
 use Filament\Support\Icons\Heroicon;
 use Filament\Tables\Table;
+use Illuminate\Database\Eloquent\Model;
 use UnitEnum;
 
 class VaultDocumentResource extends Resource
@@ -26,6 +27,20 @@ class VaultDocumentResource extends Resource
     protected static ?int $navigationSort = 1;
 
     protected static ?string $recordTitleAttribute = 'title';
+
+    public static function getGloballySearchableAttributes(): array
+    {
+        return ['title', 'category'];
+    }
+
+    public static function getGlobalSearchResultDetails(Model $record): array
+    {
+        return [
+            'Owner' => $record->familyMember?->full_name ?? 'Shared Family',
+            'Category' => ucfirst($record->category),
+            'Expires' => $record->expiry_date?->format('d M Y') ?? 'No Expiry',
+        ];
+    }
 
     public static function form(Schema $schema): Schema
     {

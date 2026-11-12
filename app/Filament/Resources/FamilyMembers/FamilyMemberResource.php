@@ -15,6 +15,7 @@ use Filament\Resources\Resource;
 use Filament\Schemas\Schema;
 use Filament\Support\Icons\Heroicon;
 use Filament\Tables\Table;
+use Illuminate\Database\Eloquent\Model;
 use UnitEnum;
 
 class FamilyMemberResource extends Resource
@@ -28,6 +29,20 @@ class FamilyMemberResource extends Resource
     protected static ?int $navigationSort = 2;
 
     protected static ?string $recordTitleAttribute = 'full_name';
+
+    public static function getGloballySearchableAttributes(): array
+    {
+        return ['full_name', 'nickname', 'phone'];
+    }
+
+    public static function getGlobalSearchResultDetails(Model $record): array
+    {
+        return [
+            'Gender' => ucfirst($record->gender),
+            'Birth' => $record->birth_date?->format('d M Y') ?? '-',
+            'Phone' => $record->phone ?? '-',
+        ];
+    }
 
     public static function form(Schema $schema): Schema
     {

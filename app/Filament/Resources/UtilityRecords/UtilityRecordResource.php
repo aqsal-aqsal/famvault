@@ -13,6 +13,7 @@ use Filament\Resources\Resource;
 use Filament\Schemas\Schema;
 use Filament\Support\Icons\Heroicon;
 use Filament\Tables\Table;
+use Illuminate\Database\Eloquent\Model;
 use UnitEnum;
 
 class UtilityRecordResource extends Resource
@@ -26,6 +27,20 @@ class UtilityRecordResource extends Resource
     protected static ?int $navigationSort = 2;
 
     protected static ?string $recordTitleAttribute = 'title';
+
+    public static function getGloballySearchableAttributes(): array
+    {
+        return ['title', 'category', 'account_number', 'account_holder_name'];
+    }
+
+    public static function getGlobalSearchResultDetails(Model $record): array
+    {
+        return [
+            'Category' => $record->category,
+            'Account #' => $record->account_number,
+            'Holder' => $record->account_holder_name ?? '-',
+        ];
+    }
 
     public static function form(Schema $schema): Schema
     {
