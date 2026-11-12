@@ -4,11 +4,12 @@ namespace App\Filament\Resources\FamilyMembers\Schemas;
 
 use Filament\Forms\Components\DatePicker;
 use Filament\Forms\Components\FileUpload;
-use Filament\Forms\Components\Section;
 use Filament\Forms\Components\Select;
 use Filament\Forms\Components\Textarea;
 use Filament\Forms\Components\TextInput;
+use Filament\Schemas\Components\Section;
 use Filament\Schemas\Schema;
+use Filament\Support\Icons\Heroicon;
 
 class FamilyMemberForm
 {
@@ -18,7 +19,7 @@ class FamilyMemberForm
             ->components([
                 Section::make('1. Identitas Anggota Keluarga')
                     ->description('Masukkan data diri lengkap dan foto anggota keluarga.')
-                    ->icon('heroicon-o-user')
+                    ->icon(Heroicon::OutlinedUser)
                     ->schema([
                         TextInput::make('full_name')
                             ->label('Nama Lengkap')
@@ -56,7 +57,7 @@ class FamilyMemberForm
 
                 Section::make('2. Hubungan Silsilah (Garis Keturunan)')
                     ->description('Hubungkan dengan orang tua atau pasangan yang sudah terdaftar untuk membentuk pohon keluarga secara otomatis.')
-                    ->icon('heroicon-o-user-group')
+                    ->icon(Heroicon::OutlinedUserGroup)
                     ->schema([
                         Select::make('father_id')
                             ->label('Ayah Kandung')
@@ -81,7 +82,7 @@ class FamilyMemberForm
 
                 Section::make('3. Kontak & Catatan Tambahan (Opsional)')
                     ->description('Nomor telepon dan informasi penting lainnya.')
-                    ->icon('heroicon-o-chat-bubble-left-ellipsis')
+                    ->icon(Heroicon::OutlinedChatBubbleLeftEllipsis)
                     ->collapsed()
                     ->schema([
                         TextInput::make('phone')

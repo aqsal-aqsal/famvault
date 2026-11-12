@@ -3,11 +3,12 @@
 namespace App\Filament\Resources\UtilityRecords\Schemas;
 
 use Filament\Forms\Components\KeyValue;
-use Filament\Forms\Components\Section;
 use Filament\Forms\Components\Select;
 use Filament\Forms\Components\Textarea;
 use Filament\Forms\Components\TextInput;
+use Filament\Schemas\Components\Section;
 use Filament\Schemas\Schema;
+use Filament\Support\Icons\Heroicon;
 
 class UtilityRecordForm
 {
@@ -17,7 +18,7 @@ class UtilityRecordForm
             ->components([
                 Section::make('1. Data Tagihan & Nomor Pelanggan')
                     ->description('Catat nomor meteran atau ID akun agar siapapun di keluarga mudah membayar tagihan.')
-                    ->icon('heroicon-o-bolt')
+                    ->icon(Heroicon::OutlinedBolt)
                     ->schema([
                         TextInput::make('title')
                             ->label('Nama Tagihan / Rekening')
@@ -51,7 +52,7 @@ class UtilityRecordForm
 
                 Section::make('2. Petunjuk Bayar & Keterangan Tambahan')
                     ->description('Jadwal pembayaran rutin dan rincian paket langganan.')
-                    ->icon('heroicon-o-information-circle')
+                    ->icon(Heroicon::OutlinedInformationCircle)
                     ->schema([
                         Textarea::make('notes')
                             ->label('Petunjuk Pembayaran / Tanggal Jatuh Tempo')

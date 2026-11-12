@@ -4,12 +4,13 @@ namespace App\Filament\Resources\VaultDocuments\Schemas;
 
 use Filament\Forms\Components\DatePicker;
 use Filament\Forms\Components\Hidden;
-use Filament\Forms\Components\Section;
 use Filament\Forms\Components\Select;
 use Filament\Forms\Components\Textarea;
 use Filament\Forms\Components\TextInput;
 use Filament\Forms\Components\ViewField;
+use Filament\Schemas\Components\Section;
 use Filament\Schemas\Schema;
+use Filament\Support\Icons\Heroicon;
 
 class VaultDocumentForm
 {
@@ -20,7 +21,7 @@ class VaultDocumentForm
                 // Step 1: Secure upload (Zero-Knowledge AES-GCM 256)
                 Section::make('Langkah 1: Unggah & Kunci Berkas')
                     ->description('Pilih dokumen dari perangkat Anda dan buat kata sandi rahasia untuk menguncinya.')
-                    ->icon('heroicon-o-lock-closed')
+                    ->icon(Heroicon::OutlinedLockClosed)
                     ->schema([
                         ViewField::make('crypto_uploader')
                             ->view('filament.forms.crypto-uploader')
@@ -42,7 +43,7 @@ class VaultDocumentForm
                 // Step 2: Human-readable metadata
                 Section::make('Langkah 2: Keterangan Dokumen')
                     ->description('Beri judul dan pilih kategori agar dokumen mudah dicari oleh anggota keluarga.')
-                    ->icon('heroicon-o-document-text')
+                    ->icon(Heroicon::OutlinedDocumentText)
                     ->schema([
                         TextInput::make('title')
                             ->label('Judul Dokumen')

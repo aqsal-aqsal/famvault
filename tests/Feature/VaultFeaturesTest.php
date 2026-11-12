@@ -122,6 +122,15 @@ class VaultFeaturesTest extends TestCase
         $response->assertSee('Brankas &amp; Silsilah Keluarga', false);
     }
 
+    public function test_resource_create_pages_render_without_error(): void
+    {
+        $user = User::factory()->create();
+
+        $this->actingAs($user)->get('/admin/family-members/create')->assertStatus(200);
+        $this->actingAs($user)->get('/admin/vault-documents/create')->assertStatus(200);
+        $this->actingAs($user)->get('/admin/utility-records/create')->assertStatus(200);
+    }
+
     public function test_authenticated_user_can_upload_encrypted_blob(): void
     {
         $user = User::factory()->create();

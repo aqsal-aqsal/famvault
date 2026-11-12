@@ -29,3 +29,4 @@ class VaultUploadController extends Controller
         ]);
     }
 }
+

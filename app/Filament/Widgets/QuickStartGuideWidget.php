@@ -12,3 +12,4 @@ class QuickStartGuideWidget extends Widget
 
     protected static ?int $sort = -10; // Placed at the very top of Dashboard
 }
+
