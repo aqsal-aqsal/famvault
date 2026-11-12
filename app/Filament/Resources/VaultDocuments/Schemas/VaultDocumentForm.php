@@ -3,7 +3,8 @@
 namespace App\Filament\Resources\VaultDocuments\Schemas;
 
 use Filament\Forms\Components\DatePicker;
-use Filament\Forms\Components\FileUpload;
+use Filament\Forms\Components\Hidden;
+use Filament\Forms\Components\Section;
 use Filament\Forms\Components\Select;
 use Filament\Forms\Components\Textarea;
 use Filament\Forms\Components\TextInput;
@@ -16,59 +17,65 @@ class VaultDocumentForm
     {
         return $schema
             ->components([
-                ViewField::make('crypto_uploader')
-                    ->view('filament.forms.crypto-uploader')
-                    ->columnSpanFull(),
-                Select::make('family_member_id')
-                    ->label('Pemilik Dokumen')
-                    ->placeholder('Pilih anggota keluarga (kosongkan jika dokumen keluarga umum)')
-                    ->relationship('familyMember', 'full_name')
-                    ->searchable()
-                    ->preload(),
-                TextInput::make('title')
-                    ->label('Judul Dokumen')
-                    ->placeholder('Contoh: KTP Ayah, SIM A, Sertifikat Tanah, Ijazah S1')
-                    ->required()
-                    ->maxLength(255),
-                Select::make('category')
-                    ->label('Kategori Dokumen')
-                    ->options([
-                        'identity' => 'Identitas (KTP, SIM, Paspor, Kartu Keluarga)',
-                        'vehicle' => 'Kendaraan (STNK, BPKB)',
-                        'property' => 'Properti (Sertifikat Hak Milik, Akta Tanah)',
-                        'education' => 'Pendidikan (Ijazah, Sertifikat Kursus)',
-                        'health' => 'Kesehatan (Kartu BPJS, Asuransi Kesehatan)',
-                        'other' => 'Lainnya / Arsip Berharga',
-                    ])
+                // Step 1: Secure upload (Zero-Knowledge AES-GCM 256)
+                Section::make('Langkah 1: Unggah & Kunci Berkas')
+                    ->description('Pilih dokumen dari perangkat Anda dan buat kata sandi rahasia untuk menguncinya.')
+                    ->icon('heroicon-o-lock-closed')
+                    ->schema([
+                        ViewField::make('crypto_uploader')
+                            ->view('filament.forms.crypto-uploader')
+                            ->columnSpanFull(),
+                    ]),
+
+                // Technical cryptographic fields stored behind the scenes
+                Hidden::make('encrypted_file_path')
                     ->required(),
-                FileUpload::make('encrypted_file_path')
-                    ->label('Berkas Terenkripsi (.enc)')
-                    ->directory('vault-documents')
-                    ->disk('local')
-                    ->required(),
-                TextInput::make('file_mime')
-                    ->label('Tipe MIME Asli')
-                    ->placeholder('Contoh: application/pdf, image/jpeg')
+                Hidden::make('file_mime')
                     ->default('application/pdf')
-                    ->required()
-                    ->maxLength(100),
-                TextInput::make('file_size_bytes')
-                    ->label('Ukuran Berkas (Bytes)')
-                    ->numeric()
+                    ->required(),
+                Hidden::make('file_size_bytes')
                     ->default(0)
                     ->required(),
-                TextInput::make('iv_salt')
-                    ->label('Payload IV & Salt (Base64)')
-                    ->placeholder('saltBase64:ivBase64')
-                    ->helperText('Dibuat otomatis oleh enkriptor browser sisi klien')
-                    ->required()
-                    ->maxLength(255),
-                DatePicker::make('expiry_date')
-                    ->label('Masa Berlaku (kosongkan jika seumur hidup)')
-                    ->native(false),
-                Textarea::make('notes')
-                    ->label('Catatan Tambahan')
-                    ->columnSpanFull(),
+                Hidden::make('iv_salt')
+                    ->required(),
+
+                // Step 2: Human-readable metadata
+                Section::make('Langkah 2: Keterangan Dokumen')
+                    ->description('Beri judul dan pilih kategori agar dokumen mudah dicari oleh anggota keluarga.')
+                    ->icon('heroicon-o-document-text')
+                    ->schema([
+                        TextInput::make('title')
+                            ->label('Judul Dokumen')
+                            ->placeholder('Contoh: KTP Ayah, Kartu Keluarga, Sertifikat Tanah Rumah')
+                            ->required()
+                            ->maxLength(255),
+                        Select::make('category')
+                            ->label('Kategori Dokumen')
+                            ->options([
+                                'identity' => 'Identitas (KTP, SIM, Paspor, Kartu Keluarga)',
+                                'vehicle' => 'Kendaraan (STNK, BPKB)',
+                                'property' => 'Properti (Sertifikat Rumah, Akta Tanah)',
+                                'education' => 'Pendidikan (Ijazah, Rapot, Piagam)',
+                                'health' => 'Kesehatan (Kartu BPJS, Asuransi)',
+                                'other' => 'Lainnya / Arsip Penting',
+                            ])
+                            ->required(),
+                        Select::make('family_member_id')
+                            ->label('Pemilik Dokumen')
+                            ->placeholder('Pilih nama anggota keluarga (kosongkan jika milik bersama keluarga)')
+                            ->relationship('familyMember', 'full_name')
+                            ->searchable()
+                            ->preload(),
+                        DatePicker::make('expiry_date')
+                            ->label('Tanggal Masa Berlaku / Kedaluwarsa')
+                            ->helperText('Kosongkan jika berlaku seumur hidup (misal Ijazah atau Akta Lahir)')
+                            ->native(false),
+                        Textarea::make('notes')
+                            ->label('Catatan Tempat Penyimpanan Fisik (Opsional)')
+                            ->placeholder('Contoh: Berkas asli fisik disimpan di lemari kamar utama rak no. 2')
+                            ->columnSpanFull(),
+                    ])
+                    ->columns(2),
             ]);
     }
 }

@@ -19,23 +19,35 @@
                 <button 
                     @click="zoomIn()" 
                     class="p-2 rounded-lg bg-white dark:bg-zinc-800 border border-zinc-300 dark:border-zinc-700 hover:bg-zinc-100 dark:hover:bg-zinc-700 text-zinc-700 dark:text-zinc-200 text-xs font-semibold"
-                    title="Perbesar"
+                    title="Perbesar Tampilan"
                 >
-                    + Perbesar
+                    🔍 + Perbesar
                 </button>
                 <button 
                     @click="zoomOut()" 
                     class="p-2 rounded-lg bg-white dark:bg-zinc-800 border border-zinc-300 dark:border-zinc-700 hover:bg-zinc-100 dark:hover:bg-zinc-700 text-zinc-700 dark:text-zinc-200 text-xs font-semibold"
-                    title="Perkecil"
+                    title="Perkecil Tampilan"
                 >
-                    - Perkecil
+                    🔍 - Perkecil
                 </button>
                 <button 
                     @click="resetView()" 
                     class="p-2 rounded-lg bg-white dark:bg-zinc-800 border border-zinc-300 dark:border-zinc-700 hover:bg-zinc-100 dark:hover:bg-zinc-700 text-zinc-700 dark:text-zinc-200 text-xs font-semibold"
                 >
-                    Atur Ulang
+                    ↺ Reset Posisi
                 </button>
+            </div>
+        </div>
+
+        <!-- Easy Guide Hint Bar -->
+        <div class="px-4 py-2.5 bg-amber-500/10 border-b border-amber-500/20 flex flex-wrap items-center justify-between gap-2 text-xs text-amber-900 dark:text-amber-300">
+            <div class="flex items-center space-x-2">
+                <span class="text-sm">💡</span>
+                <span><strong>Petunjuk Penggunaan:</strong> Klik dan geser kanvas untuk menelusuri silsilah. Klik kartu anggota untuk melihat profil dan berkas dokumennya.</span>
+            </div>
+            <div class="flex items-center space-x-3 text-[11px] font-semibold text-zinc-600 dark:text-zinc-400">
+                <span><span class="inline-block w-2.5 h-2.5 rounded-full bg-sky-500 mr-1"></span> Laki-laki</span>
+                <span><span class="inline-block w-2.5 h-2.5 rounded-full bg-rose-500 mr-1"></span> Perempuan</span>
             </div>
         </div>
 
@@ -48,6 +60,17 @@
             @mouseleave="endPan()"
             @wheel.prevent="handleWheel($event)"
         >
+            <!-- Empty state when no members -->
+            <div x-show="members.length === 0" class="absolute inset-0 flex flex-col items-center justify-center p-6 text-center z-20 pointer-events-none">
+                <span class="text-4xl mb-3">🌳</span>
+                <h3 class="text-base font-bold text-zinc-900 dark:text-zinc-100">Belum Ada Anggota Keluarga</h3>
+                <p class="text-xs text-zinc-500 max-w-sm mt-1 mb-4">
+                    Mulai bangun pohon silsilah keluarga Anda dengan menambahkan anggota keluarga pertama (misalnya Kakek atau Ayah).
+                </p>
+                <a href="{{ url('/admin/family-members/create') }}" class="pointer-events-auto px-4 py-2 rounded-xl bg-amber-500 hover:bg-amber-600 text-white font-bold text-xs shadow-sm">
+                    + Tambah Anggota Pertama
+                </a>
+            </div>
             <div 
                 class="absolute transition-transform duration-75 origin-top-left"
                 :style="`transform: translate(${panX}px, ${panY}px) scale(${zoomLevel});`"

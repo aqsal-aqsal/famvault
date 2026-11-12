@@ -4,6 +4,7 @@ namespace App\Filament\Resources\FamilyMembers\Schemas;
 
 use Filament\Forms\Components\DatePicker;
 use Filament\Forms\Components\FileUpload;
+use Filament\Forms\Components\Section;
 use Filament\Forms\Components\Select;
 use Filament\Forms\Components\Textarea;
 use Filament\Forms\Components\TextInput;
@@ -15,56 +16,84 @@ class FamilyMemberForm
     {
         return $schema
             ->components([
-                TextInput::make('full_name')
-                    ->label('Nama Lengkap')
-                    ->placeholder('Contoh: Abdullah Rahman')
-                    ->required()
-                    ->maxLength(255),
-                TextInput::make('nickname')
-                    ->label('Nama Panggilan')
-                    ->placeholder('Contoh: Kakek / Dul')
-                    ->maxLength(255),
-                Select::make('gender')
-                    ->label('Jenis Kelamin')
-                    ->options([
-                        'male' => 'Laki-laki',
-                        'female' => 'Perempuan',
+                Section::make('1. Identitas Anggota Keluarga')
+                    ->description('Masukkan data diri lengkap dan foto anggota keluarga.')
+                    ->icon('heroicon-o-user')
+                    ->schema([
+                        TextInput::make('full_name')
+                            ->label('Nama Lengkap')
+                            ->placeholder('Contoh: Abdullah Rahman')
+                            ->required()
+                            ->maxLength(255),
+                        TextInput::make('nickname')
+                            ->label('Nama Panggilan / Sapaan')
+                            ->placeholder('Contoh: Kakek Dul / Om Rahman')
+                            ->maxLength(255),
+                        Select::make('gender')
+                            ->label('Jenis Kelamin')
+                            ->options([
+                                'male' => 'Laki-laki',
+                                'female' => 'Perempuan',
+                            ])
+                            ->required(),
+                        DatePicker::make('birth_date')
+                            ->label('Tanggal Lahir')
+                            ->placeholder('Pilih tanggal lahir')
+                            ->native(false),
+                        DatePicker::make('death_date')
+                            ->label('Tanggal Wafat (Opsional)')
+                            ->helperText('Kosongkan jika anggota keluarga masih hidup')
+                            ->native(false),
+                        FileUpload::make('avatar_path')
+                            ->label('Foto Anggota Keluarga')
+                            ->image()
+                            ->directory('avatars')
+                            ->disk('public')
+                            ->avatar()
+                            ->columnSpanFull(),
                     ])
-                    ->required(),
-                DatePicker::make('birth_date')
-                    ->label('Tanggal Lahir')
-                    ->native(false),
-                DatePicker::make('death_date')
-                    ->label('Tanggal Wafat (jika telah meninggal)')
-                    ->native(false),
-                TextInput::make('phone')
-                    ->label('Nomor Telepon')
-                    ->tel()
-                    ->maxLength(30),
-                Select::make('father_id')
-                    ->label('Ayah')
-                    ->relationship('father', 'full_name')
-                    ->searchable()
-                    ->preload(),
-                Select::make('mother_id')
-                    ->label('Ibu')
-                    ->relationship('mother', 'full_name')
-                    ->searchable()
-                    ->preload(),
-                Select::make('spouse_id')
-                    ->label('Pasangan')
-                    ->relationship('spouse', 'full_name')
-                    ->searchable()
-                    ->preload(),
-                FileUpload::make('avatar_path')
-                    ->label('Foto Profil')
-                    ->image()
-                    ->directory('avatars')
-                    ->disk('public')
-                    ->avatar(),
-                Textarea::make('notes')
-                    ->label('Catatan / Biografi Singkat')
-                    ->columnSpanFull(),
+                    ->columns(2),
+
+                Section::make('2. Hubungan Silsilah (Garis Keturunan)')
+                    ->description('Hubungkan dengan orang tua atau pasangan yang sudah terdaftar untuk membentuk pohon keluarga secara otomatis.')
+                    ->icon('heroicon-o-user-group')
+                    ->schema([
+                        Select::make('father_id')
+                            ->label('Ayah Kandung')
+                            ->placeholder('Pilih ayah dari daftar keluarga')
+                            ->relationship('father', 'full_name')
+                            ->searchable()
+                            ->preload(),
+                        Select::make('mother_id')
+                            ->label('Ibu Kandung')
+                            ->placeholder('Pilih ibu dari daftar keluarga')
+                            ->relationship('mother', 'full_name')
+                            ->searchable()
+                            ->preload(),
+                        Select::make('spouse_id')
+                            ->label('Suami / Istri (Pasangan)')
+                            ->placeholder('Pilih pasangan jika sudah terdaftar')
+                            ->relationship('spouse', 'full_name')
+                            ->searchable()
+                            ->preload(),
+                    ])
+                    ->columns(3),
+
+                Section::make('3. Kontak & Catatan Tambahan (Opsional)')
+                    ->description('Nomor telepon dan informasi penting lainnya.')
+                    ->icon('heroicon-o-chat-bubble-left-ellipsis')
+                    ->collapsed()
+                    ->schema([
+                        TextInput::make('phone')
+                            ->label('Nomor Telepon / WhatsApp')
+                            ->placeholder('Contoh: 081234567890')
+                            ->tel()
+                            ->maxLength(30),
+                        Textarea::make('notes')
+                            ->label('Catatan Pribadi / Kisah Singkat')
+                            ->placeholder('Contoh: Lahir di Surabaya, pensiunan guru SMP 1.')
+                            ->columnSpanFull(),
+                    ]),
             ]);
     }
 }

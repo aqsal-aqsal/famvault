@@ -122,6 +122,26 @@ class VaultFeaturesTest extends TestCase
         $response->assertSee('Brankas &amp; Silsilah Keluarga', false);
     }
 
+    public function test_authenticated_user_can_upload_encrypted_blob(): void
+    {
+        $user = User::factory()->create();
+        \Illuminate\Support\Facades\Storage::fake('local');
+
+        $file = \Illuminate\Http\UploadedFile::fake()->create('secure.enc', 50, 'application/octet-stream');
+
+        $response = $this->actingAs($user)->postJson('/vault-documents/upload-encrypted', [
+            'encrypted_blob' => $file,
+        ]);
+
+        $response->assertStatus(200);
+        $response->assertJson([
+            'success' => true,
+        ]);
+
+        $path = $response->json('path');
+        \Illuminate\Support\Facades\Storage::disk('local')->assertExists($path);
+    }
+
     public function test_global_search_is_configured_on_resources(): void
     {
         $memberAttrs = \App\Filament\Resources\FamilyMembers\FamilyMemberResource::getGloballySearchableAttributes();

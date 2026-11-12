@@ -4,6 +4,7 @@ namespace App\Providers\Filament;
 
 use App\Filament\Widgets\DocumentCategoryChart;
 use App\Filament\Widgets\ExpiringDocumentsWidget;
+use App\Filament\Widgets\QuickStartGuideWidget;
 use App\Filament\Widgets\UtilityCategoryChart;
 use App\Filament\Widgets\VaultStatsOverview;
 use Filament\Http\Middleware\Authenticate;
@@ -50,6 +51,7 @@ class AdminPanelProvider extends PanelProvider
             ])
             ->discoverWidgets(in: app_path('Filament/Widgets'), for: 'App\Filament\Widgets')
             ->widgets([
+                QuickStartGuideWidget::class,
                 VaultStatsOverview::class,
                 ExpiringDocumentsWidget::class,
                 DocumentCategoryChart::class,

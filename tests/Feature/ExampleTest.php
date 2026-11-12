@@ -7,12 +7,13 @@ use Tests\TestCase;
 class ExampleTest extends TestCase
 {
     /**
-     * Test root route redirects to admin panel.
+     * Test root route returns the friendly landing page.
      */
     public function test_the_application_returns_a_successful_response(): void
     {
         $response = $this->get('/');
 
-        $response->assertRedirect('/admin');
+        $response->assertStatus(200);
+        $response->assertSee('FamVault');
     }
 }
