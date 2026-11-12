@@ -7,6 +7,37 @@ A secure, internal family web application built on **Laravel 11** and **Filament
 - ⏰ **Automated Expiry Reminders:** Daily scheduler and alert notifications for expiring identity cards, licenses, and passports.
 - 📱 **Progressive Web App (PWA):** Standalone app experience for Android, iOS, and Desktop.
 
+## Quick Start Guide
+
+### 1. Requirements
+- PHP 8.2+ with `pdo_sqlite`, `sqlite3`, `zip`, and `gd` extensions enabled.
+- Composer 2.x
+
+### 2. Setup
+```bash
+# Copy environment file and generate application key
+cp .env.example .env
+php artisan key:generate
+
+# Run database migrations and seed sample pedigree & utility data
+php artisan migrate --seed
+
+# Run local development server
+php artisan serve
+```
+
+Access the application at `http://127.0.0.1:8000/admin`.
+
+**Default Admin Credentials:**
+- Email: `admin@famvault.local`
+- Password: `password`
+
+### 3. Expiry Check Scheduler
+Run manually or let the automated daily cron task handle document expiry alerts:
+```bash
+php artisan vault:check-expiry
+```
+
 ## Documentation
 
 Full architectural and technical implementation guides are available in the [`docs/`](./docs) directory:
@@ -22,6 +53,6 @@ Full architectural and technical implementation guides are available in the [`do
 ## Tech Stack
 
 - **Backend:** Laravel 11, PHP 8.2+
-- **Admin & UI:** Filament PHP v3/v4, Livewire 3, Alpine.js, Tailwind CSS
+- **Admin & UI:** Filament PHP, Livewire 3, Alpine.js, Tailwind CSS
 - **Cryptography:** Web Crypto API (`window.crypto.subtle`)
 - **Platform:** Progressive Web App (PWA) Standalone Mode
