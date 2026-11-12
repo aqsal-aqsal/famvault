@@ -1,8 +1,11 @@
-const CACHE_NAME = 'family-vault-v1';
+const CACHE_NAME = 'family-vault-v2';
 const ASSETS_TO_CACHE = [
   '/manifest.json',
+  '/offline.html',
   '/icons/icon-192x192.png',
-  '/icons/icon-512x512.png'
+  '/icons/icon-512x512.png',
+  '/icons/icon-512x512-maskable.png',
+  '/js/vault-crypto.js'
 ];
 
 self.addEventListener('install', (event) => {
@@ -29,8 +32,16 @@ self.addEventListener('fetch', (event) => {
     return;
   }
 
+  // Navigation requests: try network first, fallback to offline.html
+  if (event.request.mode === 'navigate') {
+    event.respondWith(
+      fetch(event.request).catch(() => caches.match('/offline.html'))
+    );
+    return;
+  }
+
+  // Other assets: try network first, fallback to cache
   event.respondWith(
     fetch(event.request).catch(() => caches.match(event.request))
   );
 });
-

@@ -5,6 +5,7 @@ namespace App\Filament\Resources\FamilyMembers;
 use App\Filament\Resources\FamilyMembers\Pages\CreateFamilyMember;
 use App\Filament\Resources\FamilyMembers\Pages\EditFamilyMember;
 use App\Filament\Resources\FamilyMembers\Pages\ListFamilyMembers;
+use App\Filament\Resources\FamilyMembers\RelationManagers\ChildrenRelationManager;
 use App\Filament\Resources\FamilyMembers\RelationManagers\DocumentsRelationManager;
 use App\Filament\Resources\FamilyMembers\Schemas\FamilyMemberForm;
 use App\Filament\Resources\FamilyMembers\Tables\FamilyMembersTable;
@@ -41,6 +42,7 @@ class FamilyMemberResource extends Resource
     public static function getRelations(): array
     {
         return [
+            ChildrenRelationManager::class,
             DocumentsRelationManager::class,
         ];
     }

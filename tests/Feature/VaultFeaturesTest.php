@@ -86,5 +86,14 @@ class VaultFeaturesTest extends TestCase
         $this->assertEquals('220V', $utility->metadata['Voltage']);
         $this->assertEquals('R1/1300VA', $utility->metadata['Tariff']);
     }
+
+    public function test_pwa_manifest_and_offline_assets_exist(): void
+    {
+        $this->assertFileExists(public_path('manifest.json'));
+        $this->assertFileExists(public_path('offline.html'));
+        $this->assertFileExists(public_path('sw.js'));
+        $this->assertFileExists(public_path('icons/icon-192x192.png'));
+        $this->assertFileExists(public_path('icons/icon-512x512.png'));
+    }
 }
 
