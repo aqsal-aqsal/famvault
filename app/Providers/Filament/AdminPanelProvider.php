@@ -31,6 +31,7 @@ class AdminPanelProvider extends PanelProvider
             ->id('admin')
             ->path('admin')
             ->login()
+            ->profile()
             ->brandName('Family Vault & Tree')
             ->favicon('/icons/icon-192x192.png')
             ->colors([

@@ -95,5 +95,21 @@ class VaultFeaturesTest extends TestCase
         $this->assertFileExists(public_path('icons/icon-192x192.png'));
         $this->assertFileExists(public_path('icons/icon-512x512.png'));
     }
+
+    public function test_authenticated_admin_can_access_profile_page(): void
+    {
+        $user = User::factory()->create();
+
+        $response = $this->actingAs($user)->get('/admin/profile');
+        $response->assertStatus(200);
+    }
+
+    public function test_family_tree_page_is_accessible(): void
+    {
+        $user = User::factory()->create();
+
+        $response = $this->actingAs($user)->get('/admin/family-tree');
+        $response->assertStatus(200);
+    }
 }
 
