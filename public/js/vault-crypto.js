@@ -61,3 +61,4 @@ class VaultCrypto {
 }
 
 window.VaultCrypto = VaultCrypto;
+

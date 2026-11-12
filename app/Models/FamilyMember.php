@@ -58,3 +58,4 @@ class FamilyMember extends Model
             : $this->childrenAsFather();
     }
 }
+

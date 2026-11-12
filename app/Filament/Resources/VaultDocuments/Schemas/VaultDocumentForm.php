@@ -7,6 +7,7 @@ use Filament\Forms\Components\FileUpload;
 use Filament\Forms\Components\Select;
 use Filament\Forms\Components\Textarea;
 use Filament\Forms\Components\TextInput;
+use Filament\Forms\Components\ViewField;
 use Filament\Schemas\Schema;
 
 class VaultDocumentForm
@@ -15,6 +16,9 @@ class VaultDocumentForm
     {
         return $schema
             ->components([
+                ViewField::make('crypto_uploader')
+                    ->view('filament.forms.crypto-uploader')
+                    ->columnSpanFull(),
                 Select::make('family_member_id')
                     ->label('Document Owner')
                     ->relationship('familyMember', 'full_name')

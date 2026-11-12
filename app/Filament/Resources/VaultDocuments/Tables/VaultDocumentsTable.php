@@ -2,9 +2,12 @@
 
 namespace App\Filament\Resources\VaultDocuments\Tables;
 
+use App\Models\VaultDocument;
+use Filament\Actions\Action;
 use Filament\Actions\BulkActionGroup;
 use Filament\Actions\DeleteBulkAction;
 use Filament\Actions\EditAction;
+use Filament\Support\Icons\Heroicon;
 use Filament\Tables\Columns\TextColumn;
 use Filament\Tables\Table;
 
@@ -79,6 +82,14 @@ class VaultDocumentsTable
                 //
             ])
             ->recordActions([
+                Action::make('decrypt')
+                    ->label('Decrypt')
+                    ->icon(Heroicon::OutlinedLockOpen)
+                    ->color('warning')
+                    ->modalHeading(fn (VaultDocument $record) => 'Zero-Knowledge Decrypt: ' . $record->title)
+                    ->modalSubmitAction(false)
+                    ->modalCancelActionLabel('Close')
+                    ->modalContent(fn (VaultDocument $record) => view('filament.resources.vault-documents.decrypt-modal', ['record' => $record])),
                 EditAction::make(),
             ])
             ->toolbarActions([

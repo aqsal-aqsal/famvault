@@ -22,3 +22,4 @@ class VaultDocument extends Model
         return $this->belongsTo(FamilyMember::class);
     }
 }
+

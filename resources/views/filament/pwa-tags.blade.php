@@ -17,6 +17,8 @@
   }
 </style>
 
+<script src="/js/vault-crypto.js"></script>
+
 <script>
   if ('serviceWorker' in navigator) {
     window.addEventListener('load', () => {
@@ -26,3 +28,4 @@
     });
   }
 </script>
+

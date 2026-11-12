@@ -15,3 +15,4 @@ class UtilityRecord extends Model
         'metadata' => 'array',
     ];
 }
+

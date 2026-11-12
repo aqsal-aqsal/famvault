@@ -63,3 +63,4 @@ export class VaultCrypto {
 if (typeof window !== 'undefined') {
   window.VaultCrypto = VaultCrypto;
 }
+
