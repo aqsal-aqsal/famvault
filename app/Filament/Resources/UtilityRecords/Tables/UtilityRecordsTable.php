@@ -6,6 +6,7 @@ use Filament\Actions\BulkActionGroup;
 use Filament\Actions\DeleteBulkAction;
 use Filament\Actions\EditAction;
 use Filament\Tables\Columns\TextColumn;
+use Filament\Tables\Filters\SelectFilter;
 use Filament\Tables\Table;
 
 class UtilityRecordsTable
@@ -45,7 +46,16 @@ class UtilityRecordsTable
                     ->toggleable(isToggledHiddenByDefault: true),
             ])
             ->filters([
-                //
+                SelectFilter::make('category')
+                    ->options([
+                        'Electricity' => 'Electricity',
+                        'Water' => 'Water',
+                        'Internet' => 'Internet',
+                        'Insurance' => 'Insurance',
+                        'Property Tax' => 'Property Tax',
+                        'Gas' => 'Gas',
+                        'Other' => 'Other',
+                    ]),
             ])
             ->recordActions([
                 EditAction::make(),

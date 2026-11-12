@@ -10,6 +10,12 @@
                 <span class="text-xs px-2.5 py-0.5 rounded-full bg-amber-500/10 text-amber-600 dark:text-amber-400 font-medium" x-text="members.length + ' Members'"></span>
             </div>
             <div class="flex items-center space-x-2">
+                <a 
+                    href="{{ url('/admin/family-members/create') }}" 
+                    class="p-2 rounded-lg bg-amber-500 hover:bg-amber-600 text-white text-xs font-semibold shadow-sm transition-colors flex items-center space-x-1"
+                >
+                    <span>+ Add Member</span>
+                </a>
                 <button 
                     @click="zoomIn()" 
                     class="p-2 rounded-lg bg-white dark:bg-zinc-800 border border-zinc-300 dark:border-zinc-700 hover:bg-zinc-100 dark:hover:bg-zinc-700 text-zinc-700 dark:text-zinc-200 text-xs font-semibold"
@@ -104,12 +110,40 @@
 
         <!-- Selected Member Drawer / Info -->
         <template x-if="selectedMember">
-            <div class="p-4 border-t border-zinc-200 dark:border-zinc-800 bg-zinc-50 dark:bg-zinc-900/70 flex items-center justify-between">
+            <div class="p-4 border-t border-zinc-200 dark:border-zinc-800 bg-zinc-50 dark:bg-zinc-900/90 flex flex-wrap items-center justify-between gap-4">
                 <div class="flex items-center space-x-4">
-                    <span class="text-sm font-bold text-zinc-800 dark:text-zinc-200" x-text="selectedMember.name"></span>
-                    <span class="text-xs text-zinc-500" x-text="'ID #' + selectedMember.id"></span>
+                    <img 
+                        :src="selectedMember.photo || ('https://ui-avatars.com/api/?name=' + encodeURIComponent(selectedMember.name) + '&background=18181b&color=f59e0b')"
+                        class="w-10 h-10 rounded-full object-cover border border-amber-500" 
+                        alt=""
+                    />
+                    <div>
+                        <div class="flex items-center space-x-2">
+                            <span class="text-sm font-bold text-zinc-900 dark:text-zinc-100" x-text="selectedMember.name"></span>
+                            <span class="text-xs px-2 py-0.5 rounded-full font-medium" :class="selectedMember.gender === 'female' ? 'bg-rose-100 text-rose-700 dark:bg-rose-950/60 dark:text-rose-400' : 'bg-sky-100 text-sky-700 dark:bg-sky-950/60 dark:text-sky-400'" x-text="selectedMember.gender ? selectedMember.gender.toUpperCase() : ''"></span>
+                        </div>
+                        <p class="text-xs text-zinc-500 dark:text-zinc-400">
+                            <span x-text="'Birth: ' + (selectedMember.birth || 'Unknown')"></span>
+                            <span x-show="selectedMember.death" x-text="' | Death: ' + selectedMember.death"></span>
+                        </p>
+                    </div>
                 </div>
-                <button @click="selectedMember = null" class="text-xs text-zinc-400 hover:text-zinc-600">Close</button>
+
+                <div class="flex items-center space-x-3">
+                    <a 
+                        :href="'/admin/vault-documents?tableFilters[family_member_id][value]=' + selectedMember.id"
+                        class="px-3 py-1.5 rounded-lg border border-zinc-300 dark:border-zinc-700 hover:bg-zinc-100 dark:hover:bg-zinc-800 text-xs font-semibold text-zinc-700 dark:text-zinc-200"
+                    >
+                        📄 Vault Documents
+                    </a>
+                    <a 
+                        :href="'/admin/family-members/' + selectedMember.id + '/edit'"
+                        class="px-3 py-1.5 rounded-lg bg-amber-500 hover:bg-amber-600 text-xs font-semibold text-white shadow-sm"
+                    >
+                        ✏️ Edit Profile
+                    </a>
+                    <button @click="selectedMember = null" class="text-xs text-zinc-400 hover:text-zinc-600 p-1">✕</button>
+                </div>
             </div>
         </template>
     </div>

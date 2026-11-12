@@ -6,12 +6,15 @@ use App\Models\FamilyMember;
 use BackedEnum;
 use Filament\Pages\Page;
 use Filament\Support\Icons\Heroicon;
+use UnitEnum;
 
 class FamilyTree extends Page
 {
     protected static string | BackedEnum | null $navigationIcon = Heroicon::OutlinedUserGroup;
     protected static ?string $navigationLabel = 'Family Tree';
-    protected static ?string $title = 'Family Tree';
+    protected static ?string $title = 'Interactive Family Tree';
+    protected static UnitEnum|string|null $navigationGroup = 'Family Heritage';
+    protected static ?int $navigationSort = 1;
     protected string $view = 'filament.pages.family-tree';
 
     public function getTreeData(): array

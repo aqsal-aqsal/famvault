@@ -9,6 +9,8 @@ use Filament\Actions\DeleteBulkAction;
 use Filament\Actions\EditAction;
 use Filament\Support\Icons\Heroicon;
 use Filament\Tables\Columns\TextColumn;
+use Filament\Tables\Filters\Filter;
+use Filament\Tables\Filters\SelectFilter;
 use Filament\Tables\Table;
 
 class VaultDocumentsTable
@@ -79,7 +81,24 @@ class VaultDocumentsTable
                     ->toggleable(isToggledHiddenByDefault: true),
             ])
             ->filters([
-                //
+                SelectFilter::make('category')
+                    ->options([
+                        'identity' => 'Identity',
+                        'vehicle' => 'Vehicle',
+                        'property' => 'Property',
+                        'education' => 'Education',
+                        'health' => 'Health',
+                        'other' => 'Other',
+                    ]),
+                SelectFilter::make('family_member_id')
+                    ->label('Owner')
+                    ->relationship('familyMember', 'full_name'),
+                Filter::make('expiring_soon')
+                    ->label('Expiring in 30 Days')
+                    ->query(fn ($query) => $query->whereNotNull('expiry_date')->whereBetween('expiry_date', [now(), now()->addDays(30)])),
+                Filter::make('expired')
+                    ->label('Expired')
+                    ->query(fn ($query) => $query->whereNotNull('expiry_date')->where('expiry_date', '<', now())),
             ])
             ->recordActions([
                 Action::make('decrypt')
