@@ -5,6 +5,7 @@ namespace App\Filament\Resources\VaultDocuments\Tables;
 use App\Models\VaultDocument;
 use Filament\Actions\Action;
 use Filament\Actions\BulkActionGroup;
+use Filament\Actions\DeleteAction;
 use Filament\Actions\DeleteBulkAction;
 use Filament\Actions\EditAction;
 use Filament\Support\Icons\Heroicon;
@@ -119,6 +120,7 @@ class VaultDocumentsTable
                     ->modalCancelActionLabel('Tutup')
                     ->modalContent(fn (VaultDocument $record) => view('filament.resources.vault-documents.decrypt-modal', ['record' => $record])),
                 EditAction::make()->label('Ubah'),
+                DeleteAction::make()->label('Hapus'),
             ])
             ->toolbarActions([
                 BulkActionGroup::make([

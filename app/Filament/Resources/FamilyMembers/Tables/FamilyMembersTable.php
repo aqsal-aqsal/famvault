@@ -5,6 +5,7 @@ namespace App\Filament\Resources\FamilyMembers\Tables;
 use App\Models\FamilyMember;
 use Filament\Actions\Action;
 use Filament\Actions\BulkActionGroup;
+use Filament\Actions\DeleteAction;
 use Filament\Actions\DeleteBulkAction;
 use Filament\Actions\EditAction;
 use Filament\Support\Icons\Heroicon;
@@ -90,6 +91,7 @@ class FamilyMembersTable
                     ->modalCancelActionLabel('Tutup')
                     ->modalContent(fn (FamilyMember $record) => view('filament.resources.family-members.profile-modal', ['record' => $record])),
                 EditAction::make()->label('Ubah'),
+                DeleteAction::make()->label('Hapus'),
             ])
             ->toolbarActions([
                 BulkActionGroup::make([

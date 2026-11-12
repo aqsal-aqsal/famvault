@@ -3,6 +3,7 @@
 namespace App\Filament\Resources\UtilityRecords\Tables;
 
 use Filament\Actions\BulkActionGroup;
+use Filament\Actions\DeleteAction;
 use Filament\Actions\DeleteBulkAction;
 use Filament\Actions\EditAction;
 use Filament\Tables\Columns\TextColumn;
@@ -70,6 +71,7 @@ class UtilityRecordsTable
             ])
             ->recordActions([
                 EditAction::make()->label('Ubah'),
+                DeleteAction::make()->label('Hapus'),
             ])
             ->toolbarActions([
                 BulkActionGroup::make([
