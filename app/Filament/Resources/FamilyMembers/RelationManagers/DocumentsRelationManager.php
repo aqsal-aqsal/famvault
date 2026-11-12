@@ -20,6 +20,8 @@ class DocumentsRelationManager extends RelationManager
 {
     protected static string $relationship = 'documents';
 
+    protected static ?string $title = 'Dokumen Terenkripsi';
+
     public function form(Schema $schema): Schema
     {
         return VaultDocumentForm::configure($schema);
@@ -31,13 +33,13 @@ class DocumentsRelationManager extends RelationManager
             ->recordTitleAttribute('title')
             ->columns([
                 TextColumn::make('title')
-                    ->label('Title')
+                    ->label('Judul Dokumen')
                     ->searchable()
                     ->sortable()
                     ->weight('bold'),
 
                 TextColumn::make('category')
-                    ->label('Category')
+                    ->label('Kategori')
                     ->badge()
                     ->color(fn (string $state): string => match ($state) {
                         'identity' => 'info',
@@ -47,15 +49,22 @@ class DocumentsRelationManager extends RelationManager
                         'health' => 'danger',
                         default => 'gray',
                     })
-                    ->formatStateUsing(fn (string $state): string => ucfirst($state)),
+                    ->formatStateUsing(fn (string $state): string => match ($state) {
+                        'identity' => 'Identitas',
+                        'vehicle' => 'Kendaraan',
+                        'property' => 'Properti',
+                        'education' => 'Pendidikan',
+                        'health' => 'Kesehatan',
+                        default => 'Lainnya',
+                    }),
 
                 TextColumn::make('file_mime')
-                    ->label('Type')
+                    ->label('Tipe Berkas')
                     ->badge()
                     ->color('gray'),
 
                 TextColumn::make('expiry_date')
-                    ->label('Expiry Date')
+                    ->label('Masa Berlaku')
                     ->date('d M Y')
                     ->sortable()
                     ->badge()
@@ -68,29 +77,29 @@ class DocumentsRelationManager extends RelationManager
                     ->description(function ($record) {
                         if (! $record->expiry_date) return null;
                         $diff = (int) now()->diffInDays($record->expiry_date, false);
-                        if ($diff < 0) return abs($diff) . ' days overdue';
-                        if ($diff === 0) return 'Expires today!';
-                        return $diff . ' days left';
+                        if ($diff < 0) return abs($diff) . ' hari lewat';
+                        if ($diff === 0) return 'Hari ini kedaluwarsa!';
+                        return $diff . ' hari tersisa';
                     }),
             ])
             ->headerActions([
-                CreateAction::make(),
+                CreateAction::make()->label('Tambah Dokumen'),
             ])
             ->recordActions([
                 Action::make('decrypt')
-                    ->label('Decrypt')
+                    ->label('Dekripsi')
                     ->icon(Heroicon::OutlinedLockOpen)
                     ->color('warning')
-                    ->modalHeading(fn (VaultDocument $record) => 'Zero-Knowledge Decrypt: ' . $record->title)
+                    ->modalHeading(fn (VaultDocument $record) => 'Dekripsi Zero-Knowledge: ' . $record->title)
                     ->modalSubmitAction(false)
-                    ->modalCancelActionLabel('Close')
+                    ->modalCancelActionLabel('Tutup')
                     ->modalContent(fn (VaultDocument $record) => view('filament.resources.vault-documents.decrypt-modal', ['record' => $record])),
-                EditAction::make(),
-                DeleteAction::make(),
+                EditAction::make()->label('Ubah'),
+                DeleteAction::make()->label('Hapus'),
             ])
             ->toolbarActions([
                 BulkActionGroup::make([
-                    DeleteBulkAction::make(),
+                    DeleteBulkAction::make()->label('Hapus yang Dipilih'),
                 ]),
             ]);
     }

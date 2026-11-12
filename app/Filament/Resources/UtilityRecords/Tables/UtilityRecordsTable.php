@@ -16,12 +16,12 @@ class UtilityRecordsTable
         return $table
             ->columns([
                 TextColumn::make('title')
-                    ->label('Utility Name')
+                    ->label('Nama Layanan')
                     ->searchable()
                     ->sortable()
                     ->weight('bold'),
                 TextColumn::make('category')
-                    ->label('Category')
+                    ->label('Kategori')
                     ->badge()
                     ->color(fn (string $state): string => match ($state) {
                         'Electricity' => 'warning',
@@ -30,39 +30,50 @@ class UtilityRecordsTable
                         'Insurance' => 'success',
                         'Property Tax' => 'danger',
                         default => 'gray',
+                    })
+                    ->formatStateUsing(fn (string $state): string => match ($state) {
+                        'Electricity' => 'Listrik',
+                        'Water' => 'Air PDAM',
+                        'Internet' => 'Internet',
+                        'Insurance' => 'Asuransi',
+                        'Property Tax' => 'PBB',
+                        'Gas' => 'Gas',
+                        default => 'Lainnya',
                     }),
                 TextColumn::make('account_number')
-                    ->label('Account / Meter #')
+                    ->label('Nomor Akun / Meter')
                     ->copyable()
-                    ->copyMessage('Account number copied')
+                    ->copyMessage('Nomor akun berhasil disalin ke clipboard')
                     ->searchable(),
                 TextColumn::make('account_holder_name')
-                    ->label('Account Holder')
+                    ->label('Atas Nama')
                     ->searchable()
                     ->placeholder('-'),
                 TextColumn::make('created_at')
-                    ->dateTime()
+                    ->label('Didaftarkan Pada')
+                    ->dateTime('d M Y H:i')
                     ->sortable()
                     ->toggleable(isToggledHiddenByDefault: true),
             ])
             ->filters([
                 SelectFilter::make('category')
+                    ->label('Kategori Layanan')
                     ->options([
-                        'Electricity' => 'Electricity',
-                        'Water' => 'Water',
-                        'Internet' => 'Internet',
-                        'Insurance' => 'Insurance',
-                        'Property Tax' => 'Property Tax',
-                        'Gas' => 'Gas',
-                        'Other' => 'Other',
+                        'Electricity' => 'Listrik (PLN)',
+                        'Water' => 'Air (PDAM)',
+                        'Internet' => 'Internet & WiFi',
+                        'Insurance' => 'Asuransi',
+                        'Property Tax' => 'PBB / Pajak',
+                        'Gas' => 'Gas Rumah Tangga',
+                        'Other' => 'Lainnya',
                     ]),
             ])
             ->recordActions([
-                EditAction::make(),
+                EditAction::make()->label('Ubah'),
             ])
             ->toolbarActions([
                 BulkActionGroup::make([
-                    DeleteBulkAction::make(),
+                    DeleteBulkAction::make()->label('Hapus yang Dipilih'),
                 ]),
             ]);
     }

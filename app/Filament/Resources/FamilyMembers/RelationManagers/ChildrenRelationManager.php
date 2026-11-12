@@ -18,7 +18,7 @@ class ChildrenRelationManager extends RelationManager
 {
     protected static string $relationship = 'children';
 
-    protected static ?string $title = 'Children';
+    protected static ?string $title = 'Anak-anak / Keturunan';
 
     public function form(Schema $schema): Schema
     {
@@ -31,38 +31,44 @@ class ChildrenRelationManager extends RelationManager
             ->recordTitleAttribute('full_name')
             ->columns([
                 ImageColumn::make('avatar_path')
-                    ->label('Photo')
+                    ->label('Foto')
                     ->disk('public')
                     ->circular()
                     ->defaultImageUrl(fn ($record) => 'https://ui-avatars.com/api/?name=' . urlencode($record->full_name) . '&background=18181b&color=f59e0b'),
 
                 TextColumn::make('full_name')
-                    ->label('Full Name')
+                    ->label('Nama Lengkap')
                     ->searchable()
                     ->sortable()
                     ->weight('bold'),
 
                 TextColumn::make('nickname')
-                    ->label('Nickname')
+                    ->label('Panggilan')
+                    ->placeholder('-')
                     ->searchable(),
 
                 TextColumn::make('gender')
-                    ->label('Gender')
+                    ->label('Jenis Kelamin')
                     ->badge()
                     ->color(fn (string $state): string => match ($state) {
                         'male' => 'info',
                         'female' => 'danger',
                         default => 'gray',
                     })
-                    ->formatStateUsing(fn (string $state): string => ucfirst($state)),
+                    ->formatStateUsing(fn (string $state): string => match ($state) {
+                        'male' => 'Laki-laki',
+                        'female' => 'Perempuan',
+                        default => $state,
+                    }),
 
                 TextColumn::make('birth_date')
-                    ->label('Birth Date')
+                    ->label('Tanggal Lahir')
                     ->date('d M Y')
                     ->sortable(),
             ])
             ->headerActions([
                 CreateAction::make()
+                    ->label('Tambah Anak')
                     ->mutateFormDataUsing(function (array $data): array {
                         $parent = $this->getOwnerRecord();
                         if ($parent->gender === 'female') {
@@ -80,14 +86,13 @@ class ChildrenRelationManager extends RelationManager
                     }),
             ])
             ->recordActions([
-                EditAction::make(),
-                DeleteAction::make(),
+                EditAction::make()->label('Ubah'),
+                DeleteAction::make()->label('Hapus'),
             ])
             ->toolbarActions([
                 BulkActionGroup::make([
-                    DeleteBulkAction::make(),
+                    DeleteBulkAction::make()->label('Hapus yang Dipilih'),
                 ]),
             ]);
     }
 }
-

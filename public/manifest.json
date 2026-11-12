@@ -1,6 +1,6 @@
 {
-  "name": "Family Vault & Tree",
-  "short_name": "FamilyVault",
+  "name": "Brankas & Silsilah Keluarga",
+  "short_name": "FamVault",
   "start_url": "/admin",
   "scope": "/admin",
   "display": "standalone",

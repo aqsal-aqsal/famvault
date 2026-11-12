@@ -6,35 +6,35 @@
         <!-- Toolbar -->
         <div class="flex items-center justify-between p-4 border-b border-zinc-200 dark:border-zinc-800 bg-zinc-50 dark:bg-zinc-950/50">
             <div class="flex items-center space-x-3">
-                <span class="text-sm font-semibold text-zinc-700 dark:text-zinc-200">Interactive Canvas</span>
-                <span class="text-xs px-2.5 py-0.5 rounded-full bg-amber-500/10 text-amber-600 dark:text-amber-400 font-medium" x-text="members.length + ' Members'"></span>
+                <span class="text-sm font-semibold text-zinc-700 dark:text-zinc-200">Kanvas Silsilah Interaktif</span>
+                <span class="text-xs px-2.5 py-0.5 rounded-full bg-amber-500/10 text-amber-600 dark:text-amber-400 font-medium" x-text="members.length + ' Anggota Keluarga'"></span>
             </div>
             <div class="flex items-center space-x-2">
                 <a 
                     href="{{ url('/admin/family-members/create') }}" 
                     class="p-2 rounded-lg bg-amber-500 hover:bg-amber-600 text-white text-xs font-semibold shadow-sm transition-colors flex items-center space-x-1"
                 >
-                    <span>+ Add Member</span>
+                    <span>+ Tambah Anggota</span>
                 </a>
                 <button 
                     @click="zoomIn()" 
                     class="p-2 rounded-lg bg-white dark:bg-zinc-800 border border-zinc-300 dark:border-zinc-700 hover:bg-zinc-100 dark:hover:bg-zinc-700 text-zinc-700 dark:text-zinc-200 text-xs font-semibold"
-                    title="Zoom In"
+                    title="Perbesar"
                 >
-                    + Zoom In
+                    + Perbesar
                 </button>
                 <button 
                     @click="zoomOut()" 
                     class="p-2 rounded-lg bg-white dark:bg-zinc-800 border border-zinc-300 dark:border-zinc-700 hover:bg-zinc-100 dark:hover:bg-zinc-700 text-zinc-700 dark:text-zinc-200 text-xs font-semibold"
-                    title="Zoom Out"
+                    title="Perkecil"
                 >
-                    - Zoom Out
+                    - Perkecil
                 </button>
                 <button 
                     @click="resetView()" 
                     class="p-2 rounded-lg bg-white dark:bg-zinc-800 border border-zinc-300 dark:border-zinc-700 hover:bg-zinc-100 dark:hover:bg-zinc-700 text-zinc-700 dark:text-zinc-200 text-xs font-semibold"
                 >
-                    Reset
+                    Atur Ulang
                 </button>
             </div>
         </div>
@@ -123,8 +123,8 @@
                             <span class="text-xs px-2 py-0.5 rounded-full font-medium" :class="selectedMember.gender === 'female' ? 'bg-rose-100 text-rose-700 dark:bg-rose-950/60 dark:text-rose-400' : 'bg-sky-100 text-sky-700 dark:bg-sky-950/60 dark:text-sky-400'" x-text="selectedMember.gender ? selectedMember.gender.toUpperCase() : ''"></span>
                         </div>
                         <p class="text-xs text-zinc-500 dark:text-zinc-400">
-                            <span x-text="'Birth: ' + (selectedMember.birth || 'Unknown')"></span>
-                            <span x-show="selectedMember.death" x-text="' | Death: ' + selectedMember.death"></span>
+                            <span x-text="'Lahir: ' + (selectedMember.birth || 'Tidak diketahui')"></span>
+                            <span x-show="selectedMember.death" x-text="' | Wafat: ' + selectedMember.death"></span>
                         </p>
                     </div>
                 </div>
@@ -134,15 +134,15 @@
                         :href="'/admin/vault-documents?tableFilters[family_member_id][value]=' + selectedMember.id"
                         class="px-3 py-1.5 rounded-lg border border-zinc-300 dark:border-zinc-700 hover:bg-zinc-100 dark:hover:bg-zinc-800 text-xs font-semibold text-zinc-700 dark:text-zinc-200"
                     >
-                        📄 Vault Documents
+                        📄 Dokumen Brankas
                     </a>
                     <a 
                         :href="'/admin/family-members/' + selectedMember.id + '/edit'"
                         class="px-3 py-1.5 rounded-lg bg-amber-500 hover:bg-amber-600 text-xs font-semibold text-white shadow-sm"
                     >
-                        ✏️ Edit Profile
+                        ✏️ Ubah Profil
                     </a>
-                    <button @click="selectedMember = null" class="text-xs text-zinc-400 hover:text-zinc-600 p-1">✕</button>
+                    <button @click="selectedMember = null" class="text-xs text-zinc-400 hover:text-zinc-600 p-1" title="Tutup">✕</button>
                 </div>
             </div>
         </template>

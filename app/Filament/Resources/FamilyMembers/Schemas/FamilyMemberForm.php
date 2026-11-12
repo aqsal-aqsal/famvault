@@ -16,52 +16,54 @@ class FamilyMemberForm
         return $schema
             ->components([
                 TextInput::make('full_name')
-                    ->label('Full Name')
+                    ->label('Nama Lengkap')
+                    ->placeholder('Contoh: Abdullah Rahman')
                     ->required()
                     ->maxLength(255),
                 TextInput::make('nickname')
-                    ->label('Nickname')
+                    ->label('Nama Panggilan')
+                    ->placeholder('Contoh: Kakek / Dul')
                     ->maxLength(255),
                 Select::make('gender')
-                    ->label('Gender')
+                    ->label('Jenis Kelamin')
                     ->options([
-                        'male' => 'Male',
-                        'female' => 'Female',
+                        'male' => 'Laki-laki',
+                        'female' => 'Perempuan',
                     ])
                     ->required(),
                 DatePicker::make('birth_date')
-                    ->label('Birth Date')
+                    ->label('Tanggal Lahir')
                     ->native(false),
                 DatePicker::make('death_date')
-                    ->label('Death Date (if deceased)')
+                    ->label('Tanggal Wafat (jika telah meninggal)')
                     ->native(false),
                 TextInput::make('phone')
-                    ->label('Phone Number')
+                    ->label('Nomor Telepon')
                     ->tel()
                     ->maxLength(30),
                 Select::make('father_id')
-                    ->label('Father')
+                    ->label('Ayah')
                     ->relationship('father', 'full_name')
                     ->searchable()
                     ->preload(),
                 Select::make('mother_id')
-                    ->label('Mother')
+                    ->label('Ibu')
                     ->relationship('mother', 'full_name')
                     ->searchable()
                     ->preload(),
                 Select::make('spouse_id')
-                    ->label('Spouse')
+                    ->label('Pasangan')
                     ->relationship('spouse', 'full_name')
                     ->searchable()
                     ->preload(),
                 FileUpload::make('avatar_path')
-                    ->label('Profile Photo')
+                    ->label('Foto Profil')
                     ->image()
                     ->directory('avatars')
                     ->disk('public')
                     ->avatar(),
                 Textarea::make('notes')
-                    ->label('Notes / Biography')
+                    ->label('Catatan / Biografi Singkat')
                     ->columnSpanFull(),
             ]);
     }

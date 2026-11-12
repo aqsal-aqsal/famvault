@@ -8,7 +8,7 @@ use Illuminate\Support\Facades\DB;
 
 class UtilityCategoryChart extends ChartWidget
 {
-    protected ?string $heading = 'Household Utilities Distribution';
+    protected ?string $heading = 'Distribusi Utilitas Rumah Tangga';
 
     protected static ?int $sort = 3;
 
@@ -19,17 +19,30 @@ class UtilityCategoryChart extends ChartWidget
             ->pluck('count', 'category')
             ->toArray();
 
-        $labels = array_keys($categories);
+        $categoryTranslations = [
+            'Electricity' => 'Listrik (PLN)',
+            'Water' => 'Air (PDAM)',
+            'Internet' => 'Internet & WiFi',
+            'Insurance' => 'Asuransi',
+            'Property Tax' => 'PBB',
+            'Gas' => 'Gas',
+            'Other' => 'Lainnya',
+        ];
+
+        $labels = array_map(function ($key) use ($categoryTranslations) {
+            return $categoryTranslations[$key] ?? $key;
+        }, array_keys($categories));
+
         $data = array_values($categories);
 
         $colorMap = [
-            'Electricity' => '#f59e0b',
-            'Water' => '#0ea5e9',
-            'Internet' => '#6366f1',
-            'Insurance' => '#10b981',
-            'Property Tax' => '#f43f5e',
+            'Listrik (PLN)' => '#f59e0b',
+            'Air (PDAM)' => '#0ea5e9',
+            'Internet & WiFi' => '#6366f1',
+            'Asuransi' => '#10b981',
+            'PBB' => '#f43f5e',
             'Gas' => '#8b5cf6',
-            'Other' => '#71717a',
+            'Lainnya' => '#71717a',
         ];
 
         $backgroundColors = array_map(function ($cat) use ($colorMap) {
@@ -39,7 +52,7 @@ class UtilityCategoryChart extends ChartWidget
         return [
             'datasets' => [
                 [
-                    'label' => 'Accounts',
+                    'label' => 'Jumlah Akun',
                     'data' => $data,
                     'backgroundColor' => $backgroundColors,
                 ],

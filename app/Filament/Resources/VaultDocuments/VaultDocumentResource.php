@@ -22,7 +22,13 @@ class VaultDocumentResource extends Resource
 
     protected static string|BackedEnum|null $navigationIcon = Heroicon::OutlinedLockClosed;
 
-    protected static UnitEnum|string|null $navigationGroup = 'Vault & Security';
+    protected static UnitEnum|string|null $navigationGroup = 'Brankas & Keamanan';
+
+    protected static ?string $navigationLabel = 'Brankas Dokumen';
+
+    protected static ?string $modelLabel = 'Dokumen Brankas';
+
+    protected static ?string $pluralModelLabel = 'Brankas Dokumen';
 
     protected static ?int $navigationSort = 1;
 
@@ -35,10 +41,19 @@ class VaultDocumentResource extends Resource
 
     public static function getGlobalSearchResultDetails(Model $record): array
     {
+        $categoryLabels = [
+            'identity' => 'Identitas',
+            'vehicle' => 'Kendaraan',
+            'property' => 'Properti',
+            'education' => 'Pendidikan',
+            'health' => 'Kesehatan',
+            'other' => 'Lainnya',
+        ];
+
         return [
-            'Owner' => $record->familyMember?->full_name ?? 'Shared Family',
-            'Category' => ucfirst($record->category),
-            'Expires' => $record->expiry_date?->format('d M Y') ?? 'No Expiry',
+            'Pemilik' => $record->familyMember?->full_name ?? 'Dokumen Keluarga',
+            'Kategori' => $categoryLabels[$record->category] ?? ucfirst($record->category),
+            'Masa Berlaku' => $record->expiry_date?->format('d M Y') ?? 'Seumur Hidup',
         ];
     }
 

@@ -119,7 +119,7 @@ class VaultFeaturesTest extends TestCase
         $response = $this->actingAs($user)->get('/admin');
         $response->assertStatus(200);
         $response->assertSee('Dashboard');
-        $response->assertSee('Family Vault &amp; Tree', false);
+        $response->assertSee('Brankas &amp; Silsilah Keluarga', false);
     }
 
     public function test_global_search_is_configured_on_resources(): void

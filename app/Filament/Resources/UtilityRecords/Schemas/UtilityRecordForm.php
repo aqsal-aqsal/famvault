@@ -15,36 +15,39 @@ class UtilityRecordForm
         return $schema
             ->components([
                 TextInput::make('title')
-                    ->label('Utility Name')
-                    ->placeholder('e.g. Main Residence Electricity, Home Fiber 100Mbps')
+                    ->label('Nama Layanan / Akun')
+                    ->placeholder('Contoh: Listrik Rumah Utama, Internet Fiber 100Mbps, PDAM')
                     ->required()
                     ->maxLength(255),
                 Select::make('category')
-                    ->label('Category')
+                    ->label('Kategori Layanan')
                     ->options([
-                        'Electricity' => 'Electricity / Power',
-                        'Water' => 'Water / Utility',
-                        'Internet' => 'Internet / Telecom',
-                        'Insurance' => 'Insurance Policy',
-                        'Property Tax' => 'Property Tax / Municipal',
-                        'Gas' => 'Gas Utility',
-                        'Other' => 'Other Household Account',
+                        'Electricity' => 'Listrik (PLN)',
+                        'Water' => 'Air Bersih (PDAM)',
+                        'Internet' => 'Internet & Telekomunikasi',
+                        'Insurance' => 'Polis Asuransi',
+                        'Property Tax' => 'Pajak Bumi & Bangunan (PBB)',
+                        'Gas' => 'Gas Rumah Tangga (PGN/LPG)',
+                        'Other' => 'Akun Rumah Tangga Lainnya',
                     ])
                     ->required(),
                 TextInput::make('account_number')
-                    ->label('Account / Meter / Policy Number')
+                    ->label('Nomor Akun / ID Pelanggan / Nomor Meter')
+                    ->placeholder('Contoh: 530012345678')
                     ->required()
                     ->maxLength(255),
                 TextInput::make('account_holder_name')
-                    ->label('Account Holder Name')
+                    ->label('Atas Nama Pemilik Akun')
+                    ->placeholder('Contoh: Ridwan Rahman')
                     ->maxLength(255),
                 KeyValue::make('metadata')
-                    ->label('Account Metadata & Details')
-                    ->keyLabel('Field (e.g. Capacity, Address, Plan)')
-                    ->valueLabel('Value')
+                    ->label('Rincian & Metadata Tambahan')
+                    ->keyLabel('Parameter (Daya VA, Alamat, Paket, dll)')
+                    ->valueLabel('Nilai')
                     ->columnSpanFull(),
                 Textarea::make('notes')
-                    ->label('Notes / Instructions')
+                    ->label('Catatan & Petunjuk Pembayaran')
+                    ->placeholder('Contoh: Bayar sebelum tanggal 20 setiap bulan melalui m-Banking.')
                     ->columnSpanFull(),
             ]);
     }

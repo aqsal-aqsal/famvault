@@ -20,73 +20,80 @@ class FamilyMembersTable
         return $table
             ->columns([
                 ImageColumn::make('avatar_path')
-                    ->label('Photo')
+                    ->label('Foto')
                     ->disk('public')
                     ->circular()
                     ->defaultImageUrl(fn ($record) => 'https://ui-avatars.com/api/?name=' . urlencode($record->full_name) . '&background=18181b&color=f59e0b'),
                 TextColumn::make('full_name')
-                    ->label('Full Name')
+                    ->label('Nama Lengkap')
                     ->searchable()
                     ->sortable()
                     ->weight('bold'),
                 TextColumn::make('nickname')
-                    ->label('Nickname')
+                    ->label('Panggilan')
+                    ->placeholder('-')
                     ->searchable(),
                 TextColumn::make('gender')
-                    ->label('Gender')
+                    ->label('Jenis Kelamin')
                     ->badge()
                     ->color(fn (string $state): string => match ($state) {
                         'male' => 'info',
                         'female' => 'danger',
                         default => 'gray',
                     })
-                    ->formatStateUsing(fn (string $state): string => ucfirst($state)),
+                    ->formatStateUsing(fn (string $state): string => match ($state) {
+                        'male' => 'Laki-laki',
+                        'female' => 'Perempuan',
+                        default => $state,
+                    }),
                 TextColumn::make('birth_date')
-                    ->label('Birth Date')
+                    ->label('Tanggal Lahir')
                     ->date('d M Y')
                     ->sortable(),
                 TextColumn::make('father.full_name')
-                    ->label('Father')
+                    ->label('Ayah')
                     ->placeholder('-')
                     ->searchable(),
                 TextColumn::make('mother.full_name')
-                    ->label('Mother')
+                    ->label('Ibu')
                     ->placeholder('-')
                     ->searchable(),
                 TextColumn::make('spouse.full_name')
-                    ->label('Spouse')
+                    ->label('Pasangan')
                     ->placeholder('-')
                     ->searchable(),
                 TextColumn::make('phone')
-                    ->label('Phone')
+                    ->label('Telepon')
                     ->searchable()
                     ->toggleable(isToggledHiddenByDefault: true),
                 TextColumn::make('created_at')
-                    ->dateTime()
+                    ->label('Didaftarkan Pada')
+                    ->dateTime('d M Y H:i')
                     ->sortable()
                     ->toggleable(isToggledHiddenByDefault: true),
             ])
             ->filters([
                 SelectFilter::make('gender')
+                    ->label('Jenis Kelamin')
                     ->options([
-                        'male' => 'Male',
-                        'female' => 'Female',
+                        'male' => 'Laki-laki',
+                        'female' => 'Perempuan',
                     ]),
             ])
             ->recordActions([
                 Action::make('summary')
-                    ->label('Card')
+                    ->label('Kartu Arsip')
                     ->icon(Heroicon::OutlinedIdentification)
                     ->color('info')
-                    ->modalHeading(fn (FamilyMember $record) => 'Archive Summary: ' . $record->full_name)
+                    ->modalHeading(fn (FamilyMember $record) => 'Arsip Keluarga: ' . $record->full_name)
                     ->modalSubmitAction(false)
-                    ->modalCancelActionLabel('Close')
+                    ->modalCancelActionLabel('Tutup')
                     ->modalContent(fn (FamilyMember $record) => view('filament.resources.family-members.profile-modal', ['record' => $record])),
-                EditAction::make(),
+                EditAction::make()->label('Ubah'),
             ])
             ->toolbarActions([
                 BulkActionGroup::make([
-                    DeleteBulkAction::make(),
+                    DeleteBulkAction::make()->label('Hapus yang Dipilih'),
                 ]),
             ]);
     }

@@ -17,9 +17,9 @@ use UnitEnum;
 class FamilyTree extends Page
 {
     protected static string | BackedEnum | null $navigationIcon = Heroicon::OutlinedUserGroup;
-    protected static ?string $navigationLabel = 'Family Tree';
-    protected static ?string $title = 'Interactive Family Tree';
-    protected static UnitEnum|string|null $navigationGroup = 'Family Heritage';
+    protected static ?string $navigationLabel = 'Pohon Silsilah';
+    protected static ?string $title = 'Pohon Silsilah Keluarga';
+    protected static UnitEnum|string|null $navigationGroup = 'Silsilah & Keluarga';
     protected static ?int $navigationSort = 1;
     protected string $view = 'filament.pages.family-tree';
 
@@ -27,7 +27,7 @@ class FamilyTree extends Page
     {
         return [
             Action::make('export_json')
-                ->label('Export Tree Backup')
+                ->label('Ekspor Cadangan (JSON)')
                 ->icon(Heroicon::OutlinedArrowDownTray)
                 ->color('gray')
                 ->action(function (): StreamedResponse {
@@ -46,14 +46,16 @@ class FamilyTree extends Page
                 }),
 
             Action::make('import_json')
-                ->label('Import Backup')
+                ->label('Impor Cadangan')
                 ->icon(Heroicon::OutlinedArrowUpTray)
                 ->color('warning')
-                ->modalHeading('Import Family Tree Backup')
-                ->modalDescription('Upload a previously exported Family Vault JSON backup file.')
+                ->modalHeading('Impor Cadangan Pohon Silsilah')
+                ->modalDescription('Unggah berkas JSON cadangan Family Vault yang sebelumnya diekspor.')
+                ->modalSubmitActionLabel('Mulai Pemulihan')
+                ->modalCancelActionLabel('Batal')
                 ->form([
                     FileUpload::make('backup_file')
-                        ->label('Backup JSON File')
+                        ->label('Berkas Cadangan JSON')
                         ->acceptedFileTypes(['application/json', 'text/plain'])
                         ->disk('local')
                         ->directory('temp-imports')
@@ -62,7 +64,7 @@ class FamilyTree extends Page
                 ->action(function (array $data): void {
                     $path = Storage::disk('local')->path($data['backup_file']);
                     if (! file_exists($path)) {
-                        Notification::make()->title('Uploaded file not found')->danger()->send();
+                        Notification::make()->title('Berkas yang diunggah tidak ditemukan')->danger()->send();
                         return;
                     }
 
@@ -72,7 +74,7 @@ class FamilyTree extends Page
 
                     $members = $json['family_members'] ?? (is_array($json) ? $json : null);
                     if (! $members || ! is_array($members)) {
-                        Notification::make()->title('Invalid JSON backup structure')->danger()->send();
+                        Notification::make()->title('Struktur berkas JSON tidak valid')->danger()->send();
                         return;
                     }
 
@@ -112,7 +114,7 @@ class FamilyTree extends Page
                     });
 
                     Notification::make()
-                        ->title('Family tree backup restored successfully!')
+                        ->title('Cadangan silsilah keluarga berhasil dipulihkan!')
                         ->success()
                         ->send();
                 }),

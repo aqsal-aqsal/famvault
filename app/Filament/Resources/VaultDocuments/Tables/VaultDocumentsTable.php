@@ -20,17 +20,17 @@ class VaultDocumentsTable
         return $table
             ->columns([
                 TextColumn::make('title')
-                    ->label('Title')
+                    ->label('Judul Dokumen')
                     ->searchable()
                     ->sortable()
                     ->weight('bold'),
                 TextColumn::make('familyMember.full_name')
-                    ->label('Owner')
-                    ->placeholder('Shared / Family')
+                    ->label('Pemilik')
+                    ->placeholder('Dokumen Bersama')
                     ->searchable()
                     ->sortable(),
                 TextColumn::make('category')
-                    ->label('Category')
+                    ->label('Kategori')
                     ->badge()
                     ->color(fn (string $state): string => match ($state) {
                         'identity' => 'info',
@@ -40,13 +40,20 @@ class VaultDocumentsTable
                         'health' => 'danger',
                         default => 'gray',
                     })
-                    ->formatStateUsing(fn (string $state): string => ucfirst($state)),
+                    ->formatStateUsing(fn (string $state): string => match ($state) {
+                        'identity' => 'Identitas',
+                        'vehicle' => 'Kendaraan',
+                        'property' => 'Properti',
+                        'education' => 'Pendidikan',
+                        'health' => 'Kesehatan',
+                        default => 'Lainnya',
+                    }),
                 TextColumn::make('file_mime')
-                    ->label('Type')
+                    ->label('Tipe Berkas')
                     ->badge()
                     ->color('gray'),
                 TextColumn::make('file_size_bytes')
-                    ->label('Size')
+                    ->label('Ukuran')
                     ->formatStateUsing(function ($state) {
                         if ($state >= 1048576) {
                             return round($state / 1048576, 2) . ' MB';
@@ -58,62 +65,64 @@ class VaultDocumentsTable
                     })
                     ->sortable(),
                 TextColumn::make('expiry_date')
-                    ->label('Expiry Date')
+                    ->label('Masa Berlaku')
                     ->date('d M Y')
                     ->sortable()
                     ->badge()
                     ->color(fn ($state) => match (true) {
                         empty($state) => 'gray',
-                        now()->diffInDays($state, false) < 0 => 'danger',   // Already expired
-                        now()->diffInDays($state, false) <= 30 => 'warning', // Less than 30 days remaining
-                        default => 'success',                                // Valid / safe
+                        now()->diffInDays($state, false) < 0 => 'danger',
+                        now()->diffInDays($state, false) <= 30 => 'warning',
+                        default => 'success',
                     })
                     ->description(function ($record) {
                         if (! $record->expiry_date) return null;
                         $diff = (int) now()->diffInDays($record->expiry_date, false);
-                        if ($diff < 0) return abs($diff) . ' days overdue';
-                        if ($diff === 0) return 'Expires today!';
-                        return $diff . ' days left';
+                        if ($diff < 0) return abs($diff) . ' hari lewat';
+                        if ($diff === 0) return 'Hari ini kedaluwarsa!';
+                        return $diff . ' hari tersisa';
                     }),
                 TextColumn::make('created_at')
-                    ->dateTime()
+                    ->label('Diupload Pada')
+                    ->dateTime('d M Y H:i')
                     ->sortable()
                     ->toggleable(isToggledHiddenByDefault: true),
             ])
             ->filters([
                 SelectFilter::make('category')
+                    ->label('Kategori')
                     ->options([
-                        'identity' => 'Identity',
-                        'vehicle' => 'Vehicle',
-                        'property' => 'Property',
-                        'education' => 'Education',
-                        'health' => 'Health',
-                        'other' => 'Other',
+                        'identity' => 'Identitas',
+                        'vehicle' => 'Kendaraan',
+                        'property' => 'Properti',
+                        'education' => 'Pendidikan',
+                        'health' => 'Kesehatan',
+                        'other' => 'Lainnya',
                     ]),
                 SelectFilter::make('family_member_id')
-                    ->label('Owner')
+                    ->label('Pemilik')
                     ->relationship('familyMember', 'full_name'),
                 Filter::make('expiring_soon')
-                    ->label('Expiring in 30 Days')
+                    ->label('Mendekati Kedaluwarsa (<= 30 Hari)')
                     ->query(fn ($query) => $query->whereNotNull('expiry_date')->whereBetween('expiry_date', [now(), now()->addDays(30)])),
                 Filter::make('expired')
-                    ->label('Expired')
+                    ->label('Sudah Kedaluwarsa')
                     ->query(fn ($query) => $query->whereNotNull('expiry_date')->where('expiry_date', '<', now())),
             ])
             ->recordActions([
                 Action::make('decrypt')
-                    ->label('Decrypt')
+                    ->label('Dekripsi')
                     ->icon(Heroicon::OutlinedLockOpen)
                     ->color('warning')
-                    ->modalHeading(fn (VaultDocument $record) => 'Zero-Knowledge Decrypt: ' . $record->title)
+                    ->modalHeading(fn (VaultDocument $record) => 'Dekripsi Zero-Knowledge: ' . $record->title)
                     ->modalSubmitAction(false)
-                    ->modalCancelActionLabel('Close')
+                    ->modalCancelActionLabel('Tutup')
                     ->modalContent(fn (VaultDocument $record) => view('filament.resources.vault-documents.decrypt-modal', ['record' => $record])),
-                EditAction::make(),
+                EditAction::make()->label('Ubah'),
             ])
             ->toolbarActions([
                 BulkActionGroup::make([
-                    DeleteBulkAction::make(),
+                    DeleteBulkAction::make()->label('Hapus yang Dipilih'),
                 ]),
             ]);
     }

@@ -24,7 +24,13 @@ class FamilyMemberResource extends Resource
 
     protected static string|BackedEnum|null $navigationIcon = Heroicon::OutlinedUsers;
 
-    protected static UnitEnum|string|null $navigationGroup = 'Family Heritage';
+    protected static UnitEnum|string|null $navigationGroup = 'Silsilah & Keluarga';
+
+    protected static ?string $navigationLabel = 'Anggota Keluarga';
+
+    protected static ?string $modelLabel = 'Anggota Keluarga';
+
+    protected static ?string $pluralModelLabel = 'Anggota Keluarga';
 
     protected static ?int $navigationSort = 2;
 
@@ -38,9 +44,9 @@ class FamilyMemberResource extends Resource
     public static function getGlobalSearchResultDetails(Model $record): array
     {
         return [
-            'Gender' => ucfirst($record->gender),
-            'Birth' => $record->birth_date?->format('d M Y') ?? '-',
-            'Phone' => $record->phone ?? '-',
+            'Jenis Kelamin' => $record->gender === 'female' ? 'Perempuan' : 'Laki-laki',
+            'Tanggal Lahir' => $record->birth_date?->format('d M Y') ?? '-',
+            'Telepon' => $record->phone ?? '-',
         ];
     }
 

@@ -16,7 +16,7 @@ class ExpiringDocumentsWidget extends TableWidget
 
     protected int | string | array $columnSpan = 'full';
 
-    protected static ?string $heading = '⚠️ Documents Approaching Expiry (Next 60 Days)';
+    protected static ?string $heading = '⚠️ Dokumen Mendekati Masa Kedaluwarsa (60 Hari ke Depan)';
 
     public function table(Table $table): Table
     {
@@ -30,28 +30,37 @@ class ExpiringDocumentsWidget extends TableWidget
             )
             ->columns([
                 TextColumn::make('title')
-                    ->label('Document')
+                    ->label('Dokumen')
                     ->weight('bold')
                     ->searchable(),
 
                 TextColumn::make('familyMember.full_name')
-                    ->label('Family Member')
-                    ->placeholder('Shared Family Document')
+                    ->label('Pemilik Dokumen')
+                    ->placeholder('Dokumen Keluarga Bersama')
                     ->searchable(),
 
                 TextColumn::make('category')
-                    ->label('Category')
+                    ->label('Kategori')
                     ->badge()
                     ->color(fn (string $state): string => match ($state) {
                         'identity' => 'info',
                         'vehicle' => 'warning',
                         'property' => 'success',
+                        'education' => 'primary',
+                        'health' => 'danger',
                         default => 'gray',
                     })
-                    ->formatStateUsing(fn (string $state): string => ucfirst($state)),
+                    ->formatStateUsing(fn (string $state): string => match ($state) {
+                        'identity' => 'Identitas',
+                        'vehicle' => 'Kendaraan',
+                        'property' => 'Properti',
+                        'education' => 'Pendidikan',
+                        'health' => 'Kesehatan',
+                        default => 'Lainnya',
+                    }),
 
                 TextColumn::make('expiry_date')
-                    ->label('Expiry Date')
+                    ->label('Masa Berlaku')
                     ->date('d M Y')
                     ->badge()
                     ->color(fn ($state) => match (true) {
@@ -63,19 +72,19 @@ class ExpiringDocumentsWidget extends TableWidget
                     ->description(function ($record) {
                         if (! $record->expiry_date) return null;
                         $diff = (int) now()->diffInDays($record->expiry_date, false);
-                        if ($diff < 0) return abs($diff) . ' days overdue';
-                        if ($diff === 0) return 'Expires today!';
-                        return $diff . ' days remaining';
+                        if ($diff < 0) return abs($diff) . ' hari lewat';
+                        if ($diff === 0) return 'Hari ini kedaluwarsa!';
+                        return $diff . ' hari tersisa';
                     }),
             ])
             ->recordActions([
                 Action::make('decrypt')
-                    ->label('Decrypt')
+                    ->label('Dekripsi')
                     ->icon(Heroicon::OutlinedLockOpen)
                     ->color('warning')
-                    ->modalHeading(fn (VaultDocument $record) => 'Zero-Knowledge Decrypt: ' . $record->title)
+                    ->modalHeading(fn (VaultDocument $record) => 'Dekripsi Zero-Knowledge: ' . $record->title)
                     ->modalSubmitAction(false)
-                    ->modalCancelActionLabel('Close')
+                    ->modalCancelActionLabel('Tutup')
                     ->modalContent(fn (VaultDocument $record) => view('filament.resources.vault-documents.decrypt-modal', ['record' => $record])),
             ]);
     }

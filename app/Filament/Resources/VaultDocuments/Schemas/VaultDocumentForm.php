@@ -20,53 +20,54 @@ class VaultDocumentForm
                     ->view('filament.forms.crypto-uploader')
                     ->columnSpanFull(),
                 Select::make('family_member_id')
-                    ->label('Document Owner')
+                    ->label('Pemilik Dokumen')
+                    ->placeholder('Pilih anggota keluarga (kosongkan jika dokumen keluarga umum)')
                     ->relationship('familyMember', 'full_name')
                     ->searchable()
                     ->preload(),
                 TextInput::make('title')
-                    ->label('Document Title')
-                    ->placeholder('e.g. Passport, National ID, Land Certificate')
+                    ->label('Judul Dokumen')
+                    ->placeholder('Contoh: KTP Ayah, SIM A, Sertifikat Tanah, Ijazah S1')
                     ->required()
                     ->maxLength(255),
                 Select::make('category')
-                    ->label('Category')
+                    ->label('Kategori Dokumen')
                     ->options([
-                        'identity' => 'Identity (National ID, Passport, Driver License)',
-                        'vehicle' => 'Vehicle (Registration, Title)',
-                        'property' => 'Property (Certificate, Deed, Lease)',
-                        'education' => 'Education (Diploma, Transcript)',
-                        'health' => 'Health (Insurance, Medical Record)',
-                        'other' => 'Other / Miscellaneous',
+                        'identity' => 'Identitas (KTP, SIM, Paspor, Kartu Keluarga)',
+                        'vehicle' => 'Kendaraan (STNK, BPKB)',
+                        'property' => 'Properti (Sertifikat Hak Milik, Akta Tanah)',
+                        'education' => 'Pendidikan (Ijazah, Sertifikat Kursus)',
+                        'health' => 'Kesehatan (Kartu BPJS, Asuransi Kesehatan)',
+                        'other' => 'Lainnya / Arsip Berharga',
                     ])
                     ->required(),
                 FileUpload::make('encrypted_file_path')
-                    ->label('Encrypted File (.enc)')
+                    ->label('Berkas Terenkripsi (.enc)')
                     ->directory('vault-documents')
                     ->disk('local')
                     ->required(),
                 TextInput::make('file_mime')
-                    ->label('Original MIME Type')
-                    ->placeholder('e.g. application/pdf, image/jpeg')
+                    ->label('Tipe MIME Asli')
+                    ->placeholder('Contoh: application/pdf, image/jpeg')
                     ->default('application/pdf')
                     ->required()
                     ->maxLength(100),
                 TextInput::make('file_size_bytes')
-                    ->label('File Size (Bytes)')
+                    ->label('Ukuran Berkas (Bytes)')
                     ->numeric()
                     ->default(0)
                     ->required(),
                 TextInput::make('iv_salt')
-                    ->label('IV & Salt (Base64)')
+                    ->label('Payload IV & Salt (Base64)')
                     ->placeholder('saltBase64:ivBase64')
-                    ->helperText('Client-generated initialization vector and PBKDF2 salt')
+                    ->helperText('Dibuat otomatis oleh enkriptor browser sisi klien')
                     ->required()
                     ->maxLength(255),
                 DatePicker::make('expiry_date')
-                    ->label('Expiry Date')
+                    ->label('Masa Berlaku (kosongkan jika seumur hidup)')
                     ->native(false),
                 Textarea::make('notes')
-                    ->label('Notes')
+                    ->label('Catatan Tambahan')
                     ->columnSpanFull(),
             ]);
     }

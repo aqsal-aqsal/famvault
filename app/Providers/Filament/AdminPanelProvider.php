@@ -34,7 +34,7 @@ class AdminPanelProvider extends PanelProvider
             ->path('admin')
             ->login()
             ->profile()
-            ->brandName('Family Vault & Tree')
+            ->brandName('Brankas & Silsilah Keluarga')
             ->favicon('/icons/icon-192x192.png')
             ->colors([
                 'primary' => Color::Amber,

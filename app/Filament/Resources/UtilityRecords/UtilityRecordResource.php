@@ -22,7 +22,13 @@ class UtilityRecordResource extends Resource
 
     protected static string|BackedEnum|null $navigationIcon = Heroicon::OutlinedBolt;
 
-    protected static UnitEnum|string|null $navigationGroup = 'Household Utilities';
+    protected static UnitEnum|string|null $navigationGroup = 'Utilitas Rumah Tangga';
+
+    protected static ?string $navigationLabel = 'Catatan Utilitas';
+
+    protected static ?string $modelLabel = 'Catatan Utilitas';
+
+    protected static ?string $pluralModelLabel = 'Catatan Utilitas';
 
     protected static ?int $navigationSort = 2;
 
@@ -36,9 +42,9 @@ class UtilityRecordResource extends Resource
     public static function getGlobalSearchResultDetails(Model $record): array
     {
         return [
-            'Category' => $record->category,
-            'Account #' => $record->account_number,
-            'Holder' => $record->account_holder_name ?? '-',
+            'Kategori' => $record->category,
+            'Nomor Akun / Meter' => $record->account_number,
+            'Atas Nama' => $record->account_holder_name ?? '-',
         ];
     }
 

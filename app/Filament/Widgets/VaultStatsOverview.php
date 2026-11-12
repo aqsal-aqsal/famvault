@@ -20,23 +20,23 @@ class VaultStatsOverview extends StatsOverviewWidget
             ->count();
 
         return [
-            Stat::make('Family Members', FamilyMember::count())
-                ->description('Total indexed in lineage')
+            Stat::make('Anggota Keluarga', FamilyMember::count())
+                ->description('Total terdaftar dalam silsilah')
                 ->descriptionIcon(Heroicon::OutlinedUserGroup)
                 ->color('info'),
 
-            Stat::make('Secured Documents', VaultDocument::count())
-                ->description('AES-GCM 256 zero-knowledge')
+            Stat::make('Dokumen Terenkripsi', VaultDocument::count())
+                ->description('Enkripsi AES-GCM 256 zero-knowledge')
                 ->descriptionIcon(Heroicon::OutlinedLockClosed)
                 ->color('success'),
 
-            Stat::make('Expiring / Overdue', $expiringCount)
-                ->description($expiringCount > 0 ? "Requires review within 30 days" : 'All documents up to date')
+            Stat::make('Mendekati Kedaluwarsa', $expiringCount)
+                ->description($expiringCount > 0 ? "Perlu perpanjangan dalam 30 hari" : 'Semua dokumen aman & berlaku')
                 ->descriptionIcon(Heroicon::OutlinedExclamationTriangle)
                 ->color($expiringCount > 0 ? 'danger' : 'success'),
 
-            Stat::make('Utility Accounts', UtilityRecord::count())
-                ->description('Active meters & policies')
+            Stat::make('Akun Utilitas Rumah', UtilityRecord::count())
+                ->description('Meteran & polis aktif terdata')
                 ->descriptionIcon(Heroicon::OutlinedBolt)
                 ->color('warning'),
         ];

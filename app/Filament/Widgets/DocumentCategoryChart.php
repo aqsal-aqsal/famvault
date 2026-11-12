@@ -8,7 +8,7 @@ use Illuminate\Support\Facades\DB;
 
 class DocumentCategoryChart extends ChartWidget
 {
-    protected ?string $heading = 'Secured Documents by Category';
+    protected ?string $heading = 'Distribusi Dokumen Brankas';
 
     protected static ?int $sort = 4;
 
@@ -19,16 +19,28 @@ class DocumentCategoryChart extends ChartWidget
             ->pluck('count', 'category')
             ->toArray();
 
-        $labels = array_map('ucfirst', array_keys($categories));
+        $categoryTranslations = [
+            'identity' => 'Identitas',
+            'vehicle' => 'Kendaraan',
+            'property' => 'Properti',
+            'education' => 'Pendidikan',
+            'health' => 'Kesehatan',
+            'other' => 'Lainnya',
+        ];
+
+        $labels = array_map(function ($key) use ($categoryTranslations) {
+            return $categoryTranslations[$key] ?? ucfirst($key);
+        }, array_keys($categories));
+
         $data = array_values($categories);
 
         $colorMap = [
-            'Identity' => '#0ea5e9',
-            'Vehicle' => '#f59e0b',
-            'Property' => '#10b981',
-            'Education' => '#6366f1',
-            'Health' => '#f43f5e',
-            'Other' => '#71717a',
+            'Identitas' => '#0ea5e9',
+            'Kendaraan' => '#f59e0b',
+            'Properti' => '#10b981',
+            'Pendidikan' => '#6366f1',
+            'Kesehatan' => '#f43f5e',
+            'Lainnya' => '#71717a',
         ];
 
         $backgroundColors = array_map(function ($cat) use ($colorMap) {
@@ -38,7 +50,7 @@ class DocumentCategoryChart extends ChartWidget
         return [
             'datasets' => [
                 [
-                    'label' => 'Documents',
+                    'label' => 'Jumlah Dokumen',
                     'data' => $data,
                     'backgroundColor' => $backgroundColors,
                 ],
