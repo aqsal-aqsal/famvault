@@ -51,6 +51,8 @@ class FamilyMemberForm
                             ->directory('avatars')
                             ->disk('public')
                             ->avatar()
+                            ->imageEditor()
+                            ->maxSize(4096)
                             ->columnSpanFull(),
                     ])
                     ->columns(2),
